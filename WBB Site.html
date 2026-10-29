@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waine Bean &amp; Brew</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Gravitas+One&family=Inter:wght@400;500;600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brown:  #3e3025;
+      --orange: #d77d32;
+      --peach:  #fff5e0;
+      --cream:  #fffef6;
+      --gold:   #fccb6c;
+      --green:  #1b3a2a;
+      --text:   #21150b;
+      --page-gutter: max(24px, calc(50% - 640px));
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+    /* ── PAGE SWITCHING ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px var(--page-gutter);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(33,21,11,0.97); backdrop-filter: blur(10px);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 11px; text-decoration: none; cursor: pointer; }
+    .nav-logo img { width: 38px; height: 38px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.88; }
+    .nav-wordmark { font-family: 'Gravitas One', serif; font-size: 16px; color: var(--peach); letter-spacing: 0.03em; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-weight: 600; font-size: 14px; color: var(--peach); text-decoration: none; opacity: 0.75; transition: opacity 0.2s; cursor: pointer; }
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a.active { opacity: 1; text-decoration: underline; text-underline-offset: 5px; }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #f07c28; color: var(--peach);
+      font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 14px;
+      padding: 10px 14px 10px 22px; border-radius: 40px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: #be6c27; }
+    .nav-cta-icon { width: 30px; height: 30px; background: var(--brown); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .nav-cta-icon svg { width: 14px; height: 14px; stroke: var(--peach); fill: none; }
+
+    /* ── SHARED ── */
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
+    .section-title { font-family: 'Gravitas One', serif; font-size: clamp(30px, 4vw, 48px); line-height: 1.1; color: var(--brown); margin-bottom: 20px; }
+    .section-body { font-size: 16px; line-height: 1.8; color: var(--text); opacity: 0.8; margin-bottom: 18px; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--brown); color: var(--peach);
+      font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 14px;
+      padding: 13px 26px; border-radius: 40px; text-decoration: none;
+      transition: background 0.2s, transform 0.15s; cursor: pointer;
+    }
+    .btn-primary:hover { background: #2a1f15; transform: translateY(-2px); }
+    .btn-primary svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+    .btn-green {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--green); color: var(--peach);
+      font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 14px;
+      padding: 13px 26px; border-radius: 40px; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-green:hover { background: #122a1e; transform: translateY(-2px); }
+    .btn-green svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .btn-whatsapp {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: #25D366; color: #fff;
+      font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 15px;
+      padding: 13px 26px; border-radius: 40px; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-whatsapp:hover { background: #1ebe58; transform: translateY(-2px); }
+    .btn-whatsapp svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+    .btn-whatsapp-sm {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: #25D366; color: #fff;
+      font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 13px;
+      padding: 10px 18px; border-radius: 40px; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-whatsapp-sm:hover { background: #1ebe58; }
+    .btn-whatsapp-sm svg { width: 15px; height: 15px; fill: currentColor; }
+    .btn-whatsapp-lg {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: #25D366; color: #fff;
+      font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 16px;
+      padding: 16px 36px; border-radius: 40px; text-decoration: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      transition: background 0.2s, transform 0.15s; flex-shrink: 0;
+    }
+    .btn-whatsapp-lg:hover { background: #1ebe58; transform: translateY(-2px); }
+    .btn-whatsapp-lg svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
+    .btn-peach {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--peach); color: var(--brown);
+      font-family: 'Public Sans', sans-serif; font-weight: 700; font-size: 15px;
+      padding: 14px 28px; border-radius: 40px; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-peach:hover { background: white; transform: translateY(-2px); }
+    .btn-peach svg { width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
+    .btn-peach-outline {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: transparent; color: var(--peach);
+      border: 2px solid rgba(255,245,224,0.4);
+      font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 15px;
+      padding: 13px 26px; border-radius: 40px; text-decoration: none;
+      transition: border-color 0.2s, background 0.2s; cursor: pointer;
+    }
+    .btn-peach-outline:hover { border-color: var(--peach); background: rgba(255,245,224,0.08); }
+    .btn-peach-outline svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+    .contact-strip {
+      background: var(--brown); padding: 80px var(--page-gutter);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 40px;
+    }
+    .contact-strip .section-title { color: var(--peach); margin-bottom: 8px; }
+    .contact-strip .section-body { color: rgba(255,245,224,0.62); max-width: 400px; margin-bottom: 0; }
+    .contact-title { font-family: 'Gravitas One', serif; font-size: clamp(28px,3.5vw,44px); color: var(--peach); margin-bottom: 8px; line-height: 1.1; }
+    .contact-body { font-size: 16px; line-height: 1.7; color: rgba(255,245,224,0.62); max-width: 400px; }
+    footer { background: var(--brown); color: var(--peach); padding: 44px var(--page-gutter); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-top: 1px solid rgba(255,245,224,0.07); }
+    .footer-logo { display: flex; align-items: center; gap: 10px; }
+    .footer-logo img { width: 34px; height: 34px; filter: brightness(0) invert(1); opacity: 0.65; }
+    .footer-wordmark { font-family: 'Gravitas One', serif; font-size: 14px; opacity: 0.65; }
+    .footer-copy { font-size: 12px; opacity: 0.4; }
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+    .footer-links a { color: var(--peach); opacity: 0.5; font-size: 13px; text-decoration: none; transition: opacity 0.2s; cursor: pointer; }
+    .footer-links a:hover { opacity: 1; }
+    .wa-svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
+
+    /* ── HOME PAGE ── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(105deg, rgba(33,21,11,0.72) 0%, rgba(33,21,11,0.35) 60%, rgba(33,21,11,0.1) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; margin-left: var(--page-gutter); padding: 160px 0 100px; max-width: 640px; }
+    .hero-label { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+    .hero-title { font-family: 'Gravitas One', serif; font-size: clamp(48px, 6vw, 84px); color: var(--peach); line-height: 1.03; margin-bottom: 24px; }
+    .hero-sub { font-size: 18px; line-height: 1.75; color: rgba(255,245,224,0.72); max-width: 420px; margin-bottom: 40px; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-badge { margin-top: 52px; display: flex; align-items: center; gap: 14px; }
+    .hero-badge-circle {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--gold); color: var(--brown);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .hero-badge-circle-num { font-family: 'Gravitas One', serif; font-size: 18px; line-height: 1; }
+    .hero-badge-circle-stars { font-size: 9px; letter-spacing: 1px; margin-top: 2px; }
+    .hero-badge-text { color: rgba(255,245,224,0.65); font-size: 13px; line-height: 1.5; }
+    .hero-badge-text strong { color: var(--peach); display: block; font-size: 14px; }
+    .reviews-ticker { background: var(--brown); overflow: hidden; padding: 18px 0; border-top: 1px solid rgba(255,245,224,0.08); }
+    .reviews-ticker-track { display: flex; gap: 0; animation: ticker 40s linear infinite; width: max-content; }
+    .reviews-ticker:hover .reviews-ticker-track { animation-play-state: paused; }
+    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-flex; align-items: center; gap: 10px; padding: 0 48px; white-space: nowrap; font-size: 14px; color: rgba(255,245,224,0.7); font-style: italic; }
+    .ticker-stars { color: var(--gold); font-style: normal; letter-spacing: 1px; font-size: 12px; }
+    .ticker-sep { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+    .story { padding: 112px var(--page-gutter); background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .story-photo { border-radius: 22px; overflow: hidden; position: relative; aspect-ratio: 4/5; }
+    .story-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .story-badge { position: absolute; bottom: 20px; left: 20px; background: var(--gold); color: var(--brown); font-weight: 700; font-size: 13px; padding: 8px 16px; border-radius: 30px; }
+    .home-cards-section { padding: 112px var(--page-gutter); background: var(--peach); }
+    .home-cards-header { max-width: 560px; margin-bottom: 64px; }
+    .home-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .home-card { background: white; border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 24px rgba(62,48,37,0.07); transition: transform 0.25s, box-shadow 0.25s; }
+    .home-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(62,48,37,0.13); }
+    .home-card-photo { aspect-ratio: 4/3; overflow: hidden; position: relative; }
+    .home-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+    .home-card:hover .home-card-photo img { transform: scale(1.04); }
+    .home-card-tag { position: absolute; top: 14px; left: 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--brown); color: var(--gold); padding: 5px 12px; border-radius: 20px; }
+    .home-card-body { padding: 28px 28px 32px; flex: 1; display: flex; flex-direction: column; }
+    .home-card-title { font-family: 'Gravitas One', serif; font-size: 20px; color: var(--brown); margin-bottom: 12px; line-height: 1.2; }
+    .home-card-text { font-size: 14px; line-height: 1.7; color: var(--text); opacity: 0.75; flex: 1; margin-bottom: 24px; }
+    .home-card-link { display: inline-flex; align-items: center; gap: 6px; color: var(--orange); font-weight: 700; font-size: 13px; text-decoration: none; cursor: pointer; letter-spacing: 0.02em; transition: gap 0.2s; }
+    .home-card-link:hover { gap: 10px; }
+    .home-card-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+    /* ── WHAT WE DO PAGE ── */
+    .page-hero {
+      padding: 148px var(--page-gutter) 100px; background: var(--brown);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 50%; background: url('assets/photos/outside.jpg') center / cover no-repeat; opacity: 0.18; }
+    .page-hero-label { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .page-hero-title { font-family: 'Gravitas One', serif; font-size: clamp(44px, 5.5vw, 72px); color: var(--peach); line-height: 1.05; margin-bottom: 20px; }
+    .page-hero-body { font-size: 17px; line-height: 1.75; color: rgba(255,245,224,0.68); max-width: 440px; }
+    .anchor-nav { display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 2; }
+    .anchor-link { display: flex; align-items: center; justify-content: space-between; background: rgba(255,245,224,0.07); border: 1px solid rgba(255,245,224,0.12); border-radius: 14px; padding: 20px 24px; text-decoration: none; color: var(--peach); transition: background 0.2s, border-color 0.2s; cursor: pointer; }
+    .anchor-link:hover { background: rgba(255,245,224,0.13); border-color: var(--orange); }
+    .anchor-num { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .anchor-title { font-family: 'Gravitas One', serif; font-size: 17px; }
+    .anchor-link svg { width: 18px; height: 18px; stroke: var(--orange); fill: none; flex-shrink: 0; }
+    .wwd-section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
+    .wwd-section-title { font-family: 'Gravitas One', serif; font-size: clamp(30px, 4vw, 48px); line-height: 1.1; color: var(--brown); margin-bottom: 20px; }
+    .wwd-section-body { font-size: 16px; line-height: 1.8; color: var(--text); opacity: 0.8; margin-bottom: 18px; }
+    .offering-list { list-style: none; margin: 20px 0 28px; display: flex; flex-direction: column; gap: 12px; }
+    .offering-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.55; color: var(--text); opacity: 0.85; }
+    .offering-list li::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 7px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+    .img-block { border-radius: 20px; overflow: hidden; position: relative; }
+    .img-block img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .img-tag { position: absolute; bottom: 14px; left: 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: white; background: rgba(0,0,0,0.45); padding: 5px 12px; border-radius: 20px; backdrop-filter: blur(4px); }
+    .roastery { padding: 112px var(--page-gutter); background: var(--cream); }
+    .bag-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+    .bag-card { border-radius: 16px; overflow: hidden; position: relative; aspect-ratio: 3/4; }
+    .bag-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+    .bag-card:hover img { transform: scale(1.04); }
+    .bag-card-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 18px 18px; background: linear-gradient(to top, rgba(33,21,11,0.85), transparent); color: white; }
+    .bag-card-label .name { font-family: 'Gravitas One', serif; font-size: 16px; margin-bottom: 3px; }
+    .bag-card-label .sub { font-size: 11px; opacity: 0.75; }
+    .retail-box { margin-top: 40px; background: var(--peach); border-radius: 18px; padding: 32px; border-left: 4px solid var(--orange); }
+    .retail-box h4 { font-family: 'Gravitas One', serif; font-size: 20px; color: var(--brown); margin-bottom: 10px; }
+    .retail-box p { font-size: 15px; line-height: 1.65; color: var(--text); opacity: 0.8; margin-bottom: 18px; }
+    .brew { padding: 112px var(--page-gutter); background: var(--peach); }
+    .brew .wwd-section-title { color: var(--green); }
+    .brew-photo-grid { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; height: 520px; }
+    .brew-photo-grid .main-photo { grid-row: 1 / 3; border-radius: 18px; overflow: hidden; position: relative; }
+    .brew-photo-grid .main-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .brew-photo-grid .side-photo { border-radius: 18px; overflow: hidden; position: relative; }
+    .brew-photo-grid .side-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-tag { position: absolute; bottom: 12px; left: 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: white; background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 16px; backdrop-filter: blur(4px); }
+    .review-highlight { background: white; border-radius: 18px; padding: 28px; margin: 32px 0; box-shadow: 0 4px 24px rgba(62,48,37,0.08); }
+    .review-highlight-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .review-big { font-family: 'Gravitas One', serif; font-size: 40px; color: var(--brown); line-height: 1; }
+    .review-stars-big { font-size: 17px; color: var(--gold); letter-spacing: 2px; }
+    .review-count { font-size: 12px; color: var(--text); opacity: 0.5; margin-top: 3px; }
+    .review-quote { font-size: 14px; line-height: 1.7; color: var(--text); opacity: 0.75; font-style: italic; border-top: 1px solid rgba(62,48,37,0.08); padding-top: 16px; }
+    .events { padding: 112px var(--page-gutter); background: #5c3d28; }
+    .events .wwd-section-label { color: var(--gold); }
+    .events .wwd-section-title { color: var(--peach); }
+    .events .wwd-section-body { color: rgba(255,245,224,0.72); }
+    .events-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin: 52px 0; }
+    .event-card { background: rgba(255,245,224,0.07); border: 1px solid rgba(255,245,224,0.1); border-radius: 18px; padding: 30px 26px; transition: background 0.2s, border-color 0.2s; }
+    .event-card:hover { background: rgba(255,245,224,0.12); border-color: rgba(252,203,108,0.35); }
+    .event-icon { font-size: 26px; margin-bottom: 16px; }
+    .event-title { font-family: 'Gravitas One', serif; font-size: 19px; color: var(--peach); margin-bottom: 10px; line-height: 1.2; }
+    .event-desc { font-size: 14px; line-height: 1.65; color: rgba(255,245,224,0.62); }
+    .events-cta-block { background: rgba(255,245,224,0.06); border: 1px solid rgba(255,245,224,0.1); border-radius: 20px; padding: 52px; display: flex; align-items: center; gap: 60px; }
+    .events-cta-img { width: 220px; flex-shrink: 0; }
+    .events-cta-img img { width: 100%; border-radius: 14px; object-fit: cover; aspect-ratio: 3/4; }
+    .events-cta-text h3 { font-family: 'Gravitas One', serif; font-size: 30px; color: var(--peach); margin-bottom: 14px; line-height: 1.2; }
+    .events-cta-text p { font-size: 15px; line-height: 1.75; color: rgba(255,245,224,0.68); margin-bottom: 28px; }
+
+    /* ── SHOP PAGE ── */
+    .shop-hero {
+      padding: 130px var(--page-gutter) 72px; background: var(--brown);
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 40px; flex-wrap: wrap; position: relative; overflow: hidden;
+    }
+    .shop-hero::after { content: 'SHOP'; position: absolute; right: -20px; top: 20px; font-family: 'Gravitas One', serif; font-size: 260px; color: rgba(255,245,224,0.03); line-height: 1; pointer-events: none; }
+    .filters { background: var(--peach); padding: 24px var(--page-gutter); display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(62,48,37,0.1); flex-wrap: wrap; position: sticky; top: 66px; z-index: 50; }
+    .filter-label { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brown); opacity: 0.5; margin-right: 4px; }
+    .filter-btn { padding: 8px 18px; border-radius: 40px; border: 1.5px solid rgba(62,48,37,0.2); font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 13px; color: var(--brown); background: transparent; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+    .filter-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .filter-btn.active { background: var(--brown); color: var(--peach); border-color: var(--brown); }
+    .shop-grid-wrap { padding: 56px var(--page-gutter) 100px; }
+    .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .product-card { background: white; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.25s, box-shadow 0.25s; position: relative; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(62,48,37,0.13); }
+    .product-card.hidden { display: none; }
+    .card-image { width: 100%; aspect-ratio: 3/4; overflow: hidden; position: relative; background: var(--peach); }
+    .card-image img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.5s ease; }
+    .product-card:hover .card-image img { transform: scale(1.04); }
+    .card-badge { position: absolute; top: 14px; left: 14px; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; backdrop-filter: blur(4px); }
+    .badge-limited { background: var(--gold); color: var(--brown); }
+    .badge-showcase { background: rgba(27,58,42,0.85); color: white; }
+    .badge-natural { background: rgba(215,125,50,0.9); color: white; }
+    .card-content { padding: 24px 24px 28px; flex: 1; display: flex; flex-direction: column; }
+    .card-origin { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+    .card-name { font-family: 'Gravitas One', serif; font-size: 22px; color: var(--brown); margin-bottom: 8px; line-height: 1.15; }
+    .card-desc { font-size: 13px; line-height: 1.65; color: var(--text); opacity: 0.7; margin-bottom: 16px; }
+    .card-notes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .note-tag { font-size: 11px; font-weight: 600; background: var(--peach); color: var(--brown); padding: 4px 12px; border-radius: 20px; }
+    .card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .meta-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brown); opacity: 0.55; background: rgba(62,48,37,0.07); padding: 4px 10px; border-radius: 12px; }
+    .card-roast { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .roast-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brown); opacity: 0.45; }
+    .roast-beans { display: flex; gap: 3px; align-items: center; }
+    .roast-bean { width: 16px; height: 16px; }
+    .roast-bean.filled path.body { fill: var(--brown); }
+    .roast-bean.filled path.crease { stroke: rgba(255,245,224,0.5); }
+    .roast-bean.empty path.body { fill: none; stroke: var(--brown); stroke-width: 1.5; opacity: 0.3; }
+    .roast-bean.empty path.crease { display: none; }
+    .roast-name { font-size: 11px; font-weight: 700; color: var(--brown); opacity: 0.55; letter-spacing: 0.05em; }
+    .card-sizes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .size-tag { font-size: 12px; font-weight: 600; color: var(--brown); border: 1.5px solid rgba(62,48,37,0.2); padding: 5px 12px; border-radius: 10px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+    .size-tag:hover, .size-tag.selected { border-color: var(--orange); background: rgba(215,125,50,0.08); color: var(--orange); }
+    .card-price { font-family: 'Gravitas One', serif; font-size: 13px; color: var(--brown); opacity: 0.45; margin-bottom: 16px; font-style: italic; flex: 1; }
+    .card-cta { display: flex; align-items: center; gap: 9px; background: #25D366; color: white; font-family: 'Public Sans', sans-serif; font-weight: 700; font-size: 13px; padding: 12px 20px; border-radius: 40px; text-decoration: none; transition: background 0.2s, transform 0.15s; width: 100%; justify-content: center; }
+    .card-cta:hover { background: #1ebe58; transform: translateY(-1px); }
+    .card-cta svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+    .results-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+    .results-count { font-size: 13px; color: var(--text); opacity: 0.5; font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      nav { padding: 14px 24px; }
+      .hero-content { padding: 120px 0 80px; max-width: 100%; }
+      .story { grid-template-columns: 1fr; padding: 80px var(--page-gutter); gap: 48px; }
+      .story-photo { order: -1; }
+      .home-cards-section { padding: 80px var(--page-gutter); }
+      .home-cards { grid-template-columns: 1fr; }
+      .page-hero { grid-template-columns: 1fr; padding: 120px var(--page-gutter) 72px; gap: 48px; }
+      .page-hero::after { display: none; }
+      .two-col { grid-template-columns: 1fr; gap: 48px; }
+      .roastery, .brew, .events { padding: 80px var(--page-gutter); }
+      .events-cards { grid-template-columns: 1fr; }
+      .events-cta-block { flex-direction: column; padding: 36px; gap: 32px; }
+      .events-cta-img { width: 100%; }
+      .brew-photo-grid { height: auto; grid-template-columns: 1fr; }
+      .brew-photo-grid .main-photo { grid-row: auto; height: 280px; }
+      .brew-photo-grid .side-photo { height: 200px; }
+      .bag-showcase { grid-template-columns: 1fr; }
+      .shop-grid { grid-template-columns: repeat(2, 1fr); }
+      .shop-grid-wrap, .filters, .shop-hero { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
+      .contact-strip, footer { padding: 60px var(--page-gutter); }
+    }
+    @media (max-width: 600px) {
+      nav { flex-wrap: wrap; row-gap: 8px; padding: 10px var(--page-gutter); }
+      .nav-logo img { width: 32px; height: 32px; }
+      .nav-wordmark { font-size: 13px; }
+      .nav-links { order: 3; display: flex; width: 100%; justify-content: center; gap: clamp(16px, 5vw, 28px); }
+      .nav-links a { font-size: 12px; }
+      .nav-cta { font-size: 12px; padding: 7px 10px 7px 14px; }
+      .nav-cta-icon { width: 26px; height: 26px; }
+      .hero-content { padding-top: 160px; }
+      .shop-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')">
+    <img src="assets/logo-circular.png" alt="Waine Bean">
+    <span class="nav-wordmark">Waine Bean &amp; Brew</span>
+  </a>
+  <ul class="nav-links">
+    <li><a id="nav-home" class="active" onclick="showPage('home')">Home</a></li>
+    <li><a id="nav-wwd" onclick="showPage('wwd')">What We Do</a></li>
+    <li><a id="nav-shop" onclick="showPage('shop')">Shop</a></li>
+  </ul>
+  <a href="https://wa.me/254700000000?text=Hello%20Waine%20Bean!" target="_blank" class="nav-cta">
+    Order / Enquire
+    <span class="nav-cta-icon">
+      <svg viewBox="0 0 24 24" stroke-width="2"><path d="M7 17l10-10M7 7h10v10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </span>
+  </a>
+</nav>
+
+<!-- ═══════════════════════════════ HOME PAGE ═══════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="assets/photos/outside.jpg" alt="Waine Bean &amp; Brew garden space in Lavington">
+    </div>
+    <div class="hero-content">
+      <p class="hero-label">Nairobi's Specialty Coffee</p>
+      <h1 class="hero-title">Tastes as good<br>as it smells.</h1>
+      <p class="hero-sub">All things coffee — join us in Nairobi for beans, brews, knowledge, supplies, and more.</p>
+      <div class="hero-btns">
+        <a class="btn-peach-outline" onclick="showPage('wwd')">
+          What We Do
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </a>
+        <a href="https://wa.me/254700000000?text=Hello%20Waine%20Bean!" target="_blank" class="btn-whatsapp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-circle">
+          <span class="hero-badge-circle-num">5.0</span>
+          <span class="hero-badge-circle-stars">★★★★★</span>
+        </div>
+        <div class="hero-badge-text">
+          <strong>Google Reviews</strong>
+          23 reviews · Lavington, Nairobi
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="reviews-ticker">
+    <div class="reviews-ticker-track">
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "Lovely place, great coffee, atmosphere, staff! They also do coffee events."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "High grade coffee and the best latte I have ever had. Highly recommend."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "Had the iced latte and it was incredible!! The quality, the vibe, everything is on point."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "The calmness and the coffee is very amazing. Two thumbs up."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "Coffee lovers, do yourself a favor and go check it out!!"</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "Lovely place, great coffee, atmosphere, staff! They also do coffee events."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "High grade coffee and the best latte I have ever had. Highly recommend."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "Had the iced latte and it was incredible!! The quality, the vibe, everything is on point."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "The calmness and the coffee is very amazing. Two thumbs up."</span>
+      <span class="ticker-sep"></span>
+      <span class="ticker-item"><span class="ticker-stars">★★★★★</span> "Coffee lovers, do yourself a favor and go check it out!!"</span>
+      <span class="ticker-sep"></span>
+    </div>
+  </div>
+
+  <section class="story" id="story">
+    <div>
+      <p class="section-label">Our Story</p>
+      <h2 class="section-title">Rooted in<br>East Africa.</h2>
+      <p class="section-body">Kenya has been growing world-class coffee for over a century. But for most of that time, it was not owned or consumed by Kenyans.</p>
+      <p class="section-body">That's why our founder John Wainaina started Waine Bean &amp; Brew: to foster and uplift the Kenyan coffee culture, one roast at a time. We work across the entire coffee value chain — sourcing, roasting, and serving — so more Kenyans can fall in love with our own coffee.</p>
+      <a class="btn-primary" onclick="showPage('wwd')">
+        Learn More
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </a>
+    </div>
+    <div class="story-photo">
+      <img src="assets/photos/coffee-sign.jpeg" alt="Waine Bean &amp; Brew coffee sign">
+      <div class="story-badge">5.0 ★★★★★ Google</div>
+    </div>
+  </section>
+
+  <section class="home-cards-section">
+    <div class="home-cards-header">
+      <p class="section-label">What We Do</p>
+      <h2 class="section-title">Three ways to experience<br>Waine Bean.</h2>
+    </div>
+    <div class="home-cards">
+      <div class="home-card">
+        <div class="home-card-photo">
+          <img src="assets/photos/roaster-large.jpeg" alt="The Bean — Roastery">
+          <span class="home-card-tag">The Bean</span>
+        </div>
+        <div class="home-card-body">
+          <h3 class="home-card-title">Freshly Roasted,<br>Locally Sourced</h3>
+          <p class="home-card-text">We source single-origin and blended Kenyan coffees and custom roast them in Nairobi to express their best flavor. Wholesale supply, retail bags, white labeling and custom roast profiles available.</p>
+          <a class="home-card-link" onclick="showPage('wwd','roastery')">
+            Explore the Roastery
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </a>
+        </div>
+      </div>
+      <div class="home-card">
+        <div class="home-card-photo">
+          <img src="assets/photos/barista-serving.jpg" alt="The Brew — Lavington">
+          <span class="home-card-tag">The Brew</span>
+        </div>
+        <div class="home-card-body">
+          <h3 class="home-card-title">Coffee Shop<br>in Lavington</h3>
+          <p class="home-card-text">Find us on Covent Drive in Lavington. Espresso drinks, smoothies, cold brew and more — open every day in a lush garden setting. Join us for a quiet afternoon or to gather with friends.</p>
+          <a class="home-card-link" onclick="showPage('wwd','brew')">
+            Visit the Brew
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </a>
+        </div>
+      </div>
+      <div class="home-card">
+        <div class="home-card-photo">
+          <img src="assets/photos/farm-walk.jpg" alt="Events &amp; Advisory">
+          <span class="home-card-tag">Events &amp; Advisory</span>
+        </div>
+        <div class="home-card-body">
+          <h3 class="home-card-title">Coffee at Your<br>Event, or Ours</h3>
+          <p class="home-card-text">Mobile espresso bars, equipment sourcing, barista training, farm visits and cuppings. We help build Kenya's coffee community from every angle.</p>
+          <a class="home-card-link" onclick="showPage('wwd','events')">
+            Explore Events
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="contact-strip" id="contact-home">
+    <div>
+      <h2 class="section-title">Get in touch.</h2>
+      <p class="section-body">Visit the shop, order your daily beans, plan an event or just say hello — drop us a message on WhatsApp.</p>
+    </div>
+    <a href="https://wa.me/254700000000?text=Hello%20Waine%20Bean!" target="_blank" class="btn-whatsapp-lg">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+      Chat on WhatsApp
+    </a>
+  </div>
+
+  <footer>
+    <div class="footer-logo">
+      <img src="assets/logo-circular.png" alt="Waine Bean">
+      <span class="footer-wordmark">Waine Bean</span>
+    </div>
+    <ul class="footer-links">
+      <li><a onclick="showPage('home')">Home</a></li>
+      <li><a onclick="showPage('wwd')">What We Do</a></li>
+      <li><a onclick="showPage('shop')">Shop</a></li>
+      <li><a onclick="showPage('home','contact-home')">Contact</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Waine Bean &amp; Brew. Lavington, Nairobi.</p>
+  </footer>
+
+</div><!-- /page-home -->
+
+
+<!-- ═══════════════════════════════ WHAT WE DO PAGE ═══════════════════════════════ -->
+<div class="page" id="page-wwd">
+
+  <div class="page-hero">
+    <div>
+      <p class="page-hero-label">What We Do</p>
+      <h1 class="page-hero-title">Three pillars,<br>one passion.</h1>
+      <p class="page-hero-body">Coffee is an entire system so Waine Bean &amp; Brew works across the value chain — from sourcing to roasting to filling your cup — so that Kenyans can truly enjoy the best of what we grow.</p>
+    </div>
+    <div class="anchor-nav">
+      <a class="anchor-link" onclick="scrollToId('roastery')">
+        <div><p class="anchor-num">01</p><p class="anchor-title">The Bean — Roastery</p></div>
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </a>
+      <a class="anchor-link" onclick="scrollToId('brew')">
+        <div><p class="anchor-num">02</p><p class="anchor-title">The Brew — Lavington</p></div>
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </a>
+      <a class="anchor-link" onclick="scrollToId('events')">
+        <div><p class="anchor-num">03</p><p class="anchor-title">Events &amp; Services</p></div>
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </a>
+    </div>
+  </div>
+
+  <section class="roastery" id="roastery">
+    <div class="two-col">
+      <div>
+        <p class="wwd-section-label">01 — The Bean</p>
+        <h2 class="wwd-section-title">Specialty coffee,<br>roasted in Nairobi.</h2>
+        <p class="wwd-section-body">Our roastery is the heart of what we do. We source single-origin and blended Kenyan coffees from farms across the country and custom roast them to bring out the best of each bean.</p>
+        <p class="wwd-section-body">Whether you're a business looking for a reliable local supplier, or a coffee lover who wants the best crafted beans at home, we have you covered.</p>
+        <ul class="offering-list">
+          <li>Wholesale supply to businesses across Nairobi</li>
+          <li>Retail bags for home and office</li>
+          <li>Custom roast profiles and white-label options available for partnerships</li>
+          <li>Roasting facilities, education and information</li>
+        </ul>
+        <div class="retail-box">
+          <h4>Order Coffee Beans</h4>
+          <p>Freshly roasted Kenyan specialty coffee, available for delivery or pickup.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;">
+            <span style="background:var(--gold);color:var(--brown);font-weight:700;font-size:13px;padding:6px 14px;border-radius:20px;">250g — 850 Ksh</span>
+            <span style="background:var(--gold);color:var(--brown);font-weight:700;font-size:13px;padding:6px 14px;border-radius:20px;">500g — 1,600 Ksh</span>
+            <span style="background:rgba(215,125,50,0.15);color:var(--brown);font-weight:700;font-size:13px;padding:6px 14px;border-radius:20px;">1kg &amp; bulk — by arrangement</span>
+          </div>
+          <a onclick="showPage('shop')" class="btn-primary" style="margin-bottom:12px;">
+            Shop All Coffees
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </a>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20coffee%20beans%20from%20Waine%20Bean." target="_blank" class="btn-whatsapp-sm">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="img-block" style="aspect-ratio:4/5; margin-bottom: 20px;">
+          <img src="assets/photos/roaster-large.jpeg" alt="Waine Bean roastery">
+          <span class="img-tag">ROASTERY</span>
+        </div>
+        <div class="bag-showcase">
+          <div class="bag-card">
+            <img src="assets/photos/bag-new.jpeg" alt="The Waine Blend">
+            <div class="bag-card-label">
+              <div class="name">The Waine Blend</div>
+              <div class="sub">100% Kenyan AA · Washed</div>
+            </div>
+          </div>
+          <div class="bag-card">
+            <img src="assets/photos/holiday-blend.jpg" alt="Holiday Blend — Sage & Spice Kenya x Waine Bean">
+            <div class="bag-card-label">
+              <div class="name">Holiday Blend</div>
+              <div class="sub">Limited Edition · Sage &amp; Spice Kenya</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="brew" id="brew">
+    <div class="two-col" style="align-items:start;">
+      <div>
+        <p class="wwd-section-label">02 — The Brew</p>
+        <h2 class="wwd-section-title">Coffee shop<br>in Lavington.</h2>
+        <p class="wwd-section-body">Come find us on Covent Drive, next to Vapor Gym and Reign Car Wash. Our lush corner of Lavington is a welcoming space with greenery, books and games, and coffee that we're genuinely excited to share with you.</p>
+        <p class="wwd-section-body">We've got espresso drinks, smoothies, and new creations to try like matcha lemonade — open every day from early morning through evening. Whether you need coffee before the gym, a smoothie after your workout, or a chill spot to catch up with friends, karibu sana.</p>
+        <p class="wwd-section-body" style="font-style:italic;opacity:0.7;">
+</p>
+        <ul class="offering-list">
+          <li>Espresso drinks, filter coffee and cold brew</li>
+          <li>Smoothies, matcha and new creations</li>
+          <li>Serene space to read, relax, and gather</li>
+          <li>Open every day, early morning through evening</li>
+        </ul>
+        <div class="review-highlight">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <img src="assets/location-qr.png" alt="Scan for Google Maps" style="width:72px;height:72px;object-fit:contain;border-radius:8px;background:white;padding:4px;flex-shrink:0;">
+            <div>
+              <p style="font-size:13px;font-weight:700;color:var(--brown);margin-bottom:4px;">Find Us — Covent Drive, Lavington</p>
+              <p style="font-size:12px;color:var(--text);opacity:0.6;margin-bottom:10px;">Scan the QR code or tap to open in Google Maps.</p>
+              <a href="https://maps.app.goo.gl/N2dhVoSgyNMwtNb4A" target="_blank" class="btn-green" style="font-size:12px;padding:8px 16px;">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="width:14px;height:14px"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                Open in Google Maps
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="brew-photo-grid">
+          <div class="main-photo">
+            <img src="assets/photos/founder-brew.jpg" alt="John Wainaina at Waine Bean & Brew, Lavington">
+
+          </div>
+          <div class="side-photo">
+            <img src="assets/photos/booth.jpg" alt="Waine Bean interior">
+            <span class="photo-tag">Reserve a Table</span>
+          </div>
+          <div class="side-photo">
+            <img src="assets/photos/emergency.jpg" alt="Waine Bean interior mural">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="events" id="events">
+    <p class="wwd-section-label">03 — Events &amp; Services</p>
+    <h2 class="wwd-section-title" style="color:var(--peach)">Bringing You Coffee<br>and Knowledge.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:52px;">
+      <div style="border-radius:18px;overflow:hidden;aspect-ratio:4/3;">
+        <img src="assets/photos/farm-walk.jpg" alt="Farm walk" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div style="border-radius:18px;overflow:hidden;aspect-ratio:4/3;">
+        <img src="assets/photos/outside-old.jpg" alt="Waine Bean at the farm" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+      </div>
+    </div>
+    <p class="wwd-section-body" style="max-width:560px;">We're here to help you bring great coffee experiences to your community — whether that's at your event, in your new café, or out at a farm in the Kenyan countryside.</p>
+    <div class="events-cards">
+      <div class="event-card">
+        <div class="event-icon">☕</div>
+        <h3 class="event-title">Mobile Coffee Bars</h3>
+        <p class="event-desc">Whether you want to bring quality coffee to your corporate or private event, or want to open your own café, we can create custom packages of event and advisory services.</p>
+      </div>
+      <div class="event-card">
+        <div class="event-icon">⚙️</div>
+        <h3 class="event-title">Equipment Services</h3>
+        <p class="event-desc">Looking for espresso machines or coffee gear? We source quality equipment and can help handle logistics so you can focus on opening your dream café.</p>
+      </div>
+      <div class="event-card">
+        <div class="event-icon">🎓</div>
+        <h3 class="event-title">Training &amp; Advisory</h3>
+        <p class="event-desc">We love helping new cafés get started and training baristas to grow their skills. Building Kenya's coffee community means supporting everyone who's part of it!</p>
+      </div>
+      <div class="event-card">
+        <div class="event-icon">🌱</div>
+        <h3 class="event-title">Coffee Experiences</h3>
+        <p class="event-desc">Want to see where great coffee begins? We arrange visits to Kenyan coffee farms and host cuppings to build your knowledge of the coffee value chain from cherry to cup.</p>
+      </div>
+    </div>
+    <div class="events-cta-block">
+      <div class="events-cta-img">
+        <img src="assets/photos/coffee-tree.jpg" alt="Picking coffee cherries at a Kenyan farm">
+      </div>
+      <div class="events-cta-text">
+        <h3>Ready to bring Waine Bean to your event or community?</h3>
+        <p>Tell us what you have in mind — event details, training needs, equipment enquiries, or farm visit requests. We'll get back to you promptly.</p>
+        <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20enquire%20about%20a%20coffee%20event%20with%20Waine%20Bean." target="_blank" class="btn-peach">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+          Enquire on WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="contact-strip" id="contact-wwd">
+    <div>
+      <h2 class="section-title">Let's talk coffee.</h2>
+      <p class="section-body">Let's get you caffeinated! Wholesale, retail, events, equipment, training — or just a question, we're always happy to hear from you.</p>
+    </div>
+    <a href="https://wa.me/254700000000?text=Hello%20Waine%20Bean!" target="_blank" class="btn-whatsapp-lg">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+      Chat on WhatsApp
+    </a>
+  </div>
+
+  <footer>
+    <div class="footer-logo">
+      <img src="assets/logo-circular.png" alt="Waine Bean">
+      <span class="footer-wordmark">Waine Bean</span>
+    </div>
+    <ul class="footer-links">
+      <li><a onclick="showPage('home')">Home</a></li>
+      <li><a onclick="showPage('wwd')">What We Do</a></li>
+      <li><a onclick="showPage('shop')">Shop</a></li>
+      <li><a onclick="showPage('wwd','contact-wwd')">Contact</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Waine Bean &amp; Brew. Lavington, Nairobi.</p>
+  </footer>
+
+</div><!-- /page-wwd -->
+
+
+<!-- ═══════════════════════════════ SHOP PAGE ═══════════════════════════════ -->
+<div class="page" id="page-shop">
+
+  <div class="shop-hero">
+    <div>
+      <p class="page-hero-label" style="color:var(--gold);">The Roastery</p>
+      <h1 class="page-hero-title" style="color:var(--peach);">Our Coffees.</h1>
+      <p class="page-hero-sub" style="color:rgba(255,245,224,0.65);">Masterfully roasted in Nairobi. 100% Kenyan AA, sourced from the best growing regions. Available in 250g, 500g and 1kg bags — ground or whole bean.</p>
+    </div>
+    <div style="text-align:right;">
+      <p style="font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">All bags</p>
+      <p style="font-family:'Gravitas One',serif;font-size:28px;color:var(--peach);line-height:1;">Ground or Whole Bean</p>
+    </div>
+  </div>
+
+  <div class="filters">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-filter="all">All Coffees</button>
+    <button class="filter-btn" data-filter="washed">Washed Process</button>
+    <button class="filter-btn" data-filter="natural">Natural Process</button>
+    <button class="filter-btn" data-filter="limited">Limited Edition</button>
+    <button class="filter-btn" data-filter="showcase">Kenya Showcase</button>
+  </div>
+
+  <div class="shop-grid-wrap">
+    <div class="results-bar">
+      <span class="results-count" id="results-count">7 coffees</span>
+      <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20place%20a%20bulk%20coffee%20order." target="_blank" style="font-size:13px;font-weight:600;color:var(--orange);text-decoration:none;">Bulk / wholesale orders →</a>
+    </div>
+    <div class="shop-grid" id="shop-grid">
+
+      <!-- WAINE BLEND -->
+      <div class="product-card" data-process="washed" data-type="showcase" data-name="The Waine Blend" style="border:2px solid var(--gold);">
+        <div class="card-image">
+          <img src="assets/photos/waine-blend-bag2.jpg" alt="The Waine Blend">
+          <span class="card-badge badge-limited" style="background:var(--brown);color:var(--gold);">House Blend</span>
+        </div>
+        <div class="card-content">
+          <p class="card-origin">The Signature · 100% Kenyan AA</p>
+          <h2 class="card-name">The Waine Blend</h2>
+          <p class="card-desc">Bright, sweet, perfectly balanced. There's a reason it's our house blend: it's built for every kind of brew method.</p>
+          <div class="card-notes">
+            <span class="note-tag">Full Body</span><span class="note-tag">Orange Acidity</span><span class="note-tag">Hints of Vanilla</span><span class="note-tag">Burnt Sugar</span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-tag">Washed</span><span class="meta-tag">100% Kenyan AA</span><span class="meta-tag">House Blend</span>
+          </div>
+          <div class="card-roast">
+            <span class="roast-label">Roast</span>
+            <div class="roast-beans">
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean empty" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/></svg>
+            </div>
+            <span class="roast-name">Medium</span>
+          </div>
+          <div class="card-sizes">
+            <span class="size-tag selected">250g</span><span class="size-tag">500g</span><span class="size-tag">1kg</span>
+          </div>
+          <p class="card-price">Contact for pricing</p>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20The%20Waine%20Blend." target="_blank" class="card-cta">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- KIAMBU -->
+      <div class="product-card" data-process="washed" data-type="showcase" data-name="Kiambu">
+        <div class="card-image">
+          <img src="assets/photos/latte-on-beans.jpg" alt="Kiambu">
+          <span class="card-badge badge-showcase">Kenya Showcase</span>
+        </div>
+        <div class="card-content">
+          <p class="card-origin">Kiambu Region</p>
+          <h2 class="card-name">Kiambu</h2>
+          <p class="card-desc">A lively, more balanced acidity provides a round body with lingering finish.</p>
+          <div class="card-notes">
+            <span class="note-tag">Black Tea</span><span class="note-tag">Lemon</span><span class="note-tag">Maple Syrup</span><span class="note-tag">Sweetness</span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-tag">Washed</span><span class="meta-tag">100% Kenyan AA</span>
+          </div>
+          <div class="card-roast">
+            <span class="roast-label">Roast</span>
+            <div class="roast-beans">
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean empty" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/></svg>
+            </div>
+            <span class="roast-name">Medium</span>
+          </div>
+          <div class="card-sizes">
+            <span class="size-tag selected">250g</span><span class="size-tag">500g</span><span class="size-tag">1kg</span>
+          </div>
+          <p class="card-price">Contact for pricing</p>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20the%20Kiambu%20blend." target="_blank" class="card-cta">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- KIRINYAGA -->
+      <div class="product-card" data-process="washed" data-type="showcase" data-name="Kirinyaga">
+        <div class="card-image">
+          <img src="assets/photos/barista-tamping.jpg" alt="Kirinyaga">
+          <span class="card-badge badge-showcase">Kenya Showcase</span>
+        </div>
+        <div class="card-content">
+          <p class="card-origin">Kirinyaga Region</p>
+          <h2 class="card-name">Kirinyaga</h2>
+          <p class="card-desc">This vibrant bean produces a cup with round full body with clean and juicy aftertaste.</p>
+          <div class="card-notes">
+            <span class="note-tag">Blackcurrant</span><span class="note-tag">Cranberry</span><span class="note-tag">Red Berries</span><span class="note-tag">Citrus Acidity</span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-tag">Washed</span><span class="meta-tag">100% Kenyan AA</span>
+          </div>
+          <div class="card-roast">
+            <span class="roast-label">Roast</span>
+            <div class="roast-beans">
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean empty" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/></svg>
+            </div>
+            <span class="roast-name">Medium</span>
+          </div>
+          <div class="card-sizes">
+            <span class="size-tag selected">250g</span><span class="size-tag">500g</span><span class="size-tag">1kg</span>
+          </div>
+          <p class="card-price">Contact for pricing</p>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20the%20Kirinyaga%20blend." target="_blank" class="card-cta">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- DAGORETTI -->
+      <div class="product-card" data-process="natural" data-type="showcase" data-name="Dagoretti">
+        <div class="card-image">
+          <img src="assets/photos/pouring-beans.jpg" alt="Dagoretti">
+          <span class="card-badge badge-natural">Natural Process</span>
+        </div>
+        <div class="card-content">
+          <p class="card-origin">Dagoretti, Nairobi–Kiambu</p>
+          <h2 class="card-name">Dagoretti</h2>
+          <p class="card-desc">Naturally processed right where Nairobi meets Kiambu — as close to home as coffee grows.</p>
+          <div class="card-notes">
+            <span class="note-tag">Gooseberries</span><span class="note-tag">Brown Sugar</span><span class="note-tag">Dark Chocolate</span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-tag">Natural</span><span class="meta-tag">100% Kenyan AA</span>
+          </div>
+          <div class="card-roast">
+            <span class="roast-label">Roast</span>
+            <div class="roast-beans">
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean empty" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/></svg>
+            </div>
+            <span class="roast-name">Medium</span>
+          </div>
+          <div class="card-sizes">
+            <span class="size-tag selected">250g</span>
+          </div>
+          <p class="card-price">Contact for pricing</p>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20the%20Dagoretti%20blend." target="_blank" class="card-cta">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- MACHAKOS -->
+      <div class="product-card" data-process="washed" data-type="showcase" data-name="Machakos">
+        <div class="card-image">
+          <img src="assets/photos/latte-heart.jpg" alt="Machakos">
+          <span class="card-badge badge-showcase">Kenya Showcase</span>
+        </div>
+        <div class="card-content">
+          <p class="card-origin">Machakos Region</p>
+          <h2 class="card-name">Machakos</h2>
+          <p class="card-desc">Lower acidity and a more mellow, structured profile delivering a sweet and balanced cup.</p>
+          <div class="card-notes">
+            <span class="note-tag">Fruity</span><span class="note-tag">Chocolate</span><span class="note-tag">Hints of Caramel</span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-tag">Washed</span><span class="meta-tag">100% Kenyan AA</span>
+          </div>
+          <div class="card-roast">
+            <span class="roast-label">Roast</span>
+            <div class="roast-beans">
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean empty" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/></svg>
+            </div>
+            <span class="roast-name">Medium</span>
+          </div>
+          <div class="card-sizes">
+            <span class="size-tag selected">250g</span><span class="size-tag">500g</span><span class="size-tag">1kg</span>
+          </div>
+          <p class="card-price">Contact for pricing</p>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20the%20Machakos%20blend." target="_blank" class="card-cta">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- HOLIDAY BLEND (Sold Out) -->
+      <div class="product-card" data-process="washed" data-type="limited" data-name="Holiday Blend" style="opacity:0.8;">
+        <div class="card-image" style="position:relative;">
+          <img src="assets/photos/holiday-blend.jpg" alt="Holiday Blend — Sage &amp; Spice Kenya x Waine Bean">
+          <span class="card-badge badge-limited">Limited Edition</span>
+          <div style="position:absolute;inset:0;background:rgba(33,21,11,0.55);display:flex;align-items:center;justify-content:center;">
+            <span style="background:var(--brown);color:var(--peach);font-family:'Public Sans',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;padding:10px 22px;border-radius:40px;border:1.5px solid rgba(255,245,224,0.25);">Sold Out</span>
+          </div>
+        </div>
+        <div class="card-content">
+          <p class="card-origin">Partner Roast · <a href="https://www.instagram.com/sageandspice_kenya" target="_blank" style="color:var(--orange);text-decoration:none;font-weight:700;">Sage &amp; Spice Kenya ↗</a></p>
+          <h2 class="card-name">Holiday Blend</h2>
+          <p class="card-desc">A limited-edition custom roast crafted for Sage &amp; Spice Kenya's Christmas hampers. Rich, aromatic and beautifully balanced — a comforting classic made to be savoured.</p>
+          <div class="card-notes">
+            <span class="note-tag">Dark Cacao</span><span class="note-tag">Red Soil</span><span class="note-tag">Warm Spice</span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-tag">Washed</span><span class="meta-tag">100% Kenyan AA</span><span class="meta-tag">Partner Roast</span>
+          </div>
+          <div class="card-roast">
+            <span class="roast-label">Roast</span>
+            <div class="roast-beans">
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean empty" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/></svg>
+            </div>
+            <span class="roast-name">Medium</span>
+          </div>
+          <div class="card-sizes">
+            <span class="size-tag selected">250g</span>
+          </div>
+          <p class="card-price" style="opacity:1;color:var(--orange);">Sold out — next batch coming soon</p>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20be%20notified%20when%20the%20Holiday%20Blend%20is%20back%20in%20stock." target="_blank" class="card-cta" style="background:var(--brown);">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Notify Me When Available
+          </a>
+        </div>
+      </div>
+
+      <!-- EASTER BLEND 2026 -->
+      <div class="product-card" data-process="washed" data-type="limited" data-name="Easter Blend 2026">
+        <div class="card-image">
+          <img src="assets/photos/easter-blend-bag.jpg" alt="Easter Blend 2026">
+          <span class="card-badge badge-limited">Limited Edition</span>
+        </div>
+        <div class="card-content">
+          <p class="card-origin">100% Kenyan AA</p>
+          <h2 class="card-name">Easter Blend 2026</h2>
+          <p class="card-desc">A special seasonal offering celebrating the richness of Kenyan specialty coffee.</p>
+          <div class="card-notes">
+            <span class="note-tag">Floral</span><span class="note-tag">Apricots</span><span class="note-tag">Chocolate</span><span class="note-tag">Stone Fruits</span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-tag">Washed</span><span class="meta-tag">100% Kenyan AA</span><span class="meta-tag">Seasonal</span>
+          </div>
+          <div class="card-roast">
+            <span class="roast-label">Roast</span>
+            <div class="roast-beans">
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean filled" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/><path class="crease" d="M10 4 C10 10 10 14 10 21" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+              <svg class="roast-bean empty" viewBox="0 0 20 24"><path class="body" d="M10 1 C5 1 1 6 1 12 C1 18 5 23 10 23 C15 23 19 18 19 12 C19 6 15 1 10 1Z"/></svg>
+            </div>
+            <span class="roast-name">Medium</span>
+          </div>
+          <div class="card-sizes">
+            <span class="size-tag selected">250g</span><span class="size-tag">500g</span><span class="size-tag">1kg</span>
+          </div>
+          <p class="card-price">Contact for pricing</p>
+          <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20the%20Easter%20Blend%202026." target="_blank" class="card-cta">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="contact-strip">
+    <div>
+      <h2 class="contact-title">Need a larger order?</h2>
+      <p class="contact-body">Wholesale, bulk and corporate orders available. Get in touch and we'll sort you out.</p>
+    </div>
+    <a href="https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20enquire%20about%20a%20bulk%20coffee%20order." target="_blank" class="btn-whatsapp-lg">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enquire on WhatsApp
+    </a>
+  </div>
+
+  <footer>
+    <div class="footer-logo">
+      <img src="assets/logo-circular.png" alt="Waine Bean">
+      <span class="footer-wordmark">Waine Bean</span>
+    </div>
+    <ul class="footer-links">
+      <li><a onclick="showPage('home')">Home</a></li>
+      <li><a onclick="showPage('wwd')">What We Do</a></li>
+      <li><a onclick="showPage('shop')">Shop</a></li>
+      <li><a onclick="showPage('home','contact-home')">Contact</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Waine Bean &amp; Brew. Lavington, Nairobi.</p>
+  </footer>
+
+</div><!-- /page-shop -->
+
+<script>
+  function showPage(page, scrollTo) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    // Show target
+    document.getElementById('page-' + page).classList.add('active');
+    // Update nav active state
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + page);
+    if (navEl) navEl.classList.add('active');
+    // Scroll
+    if (scrollTo) {
+      setTimeout(() => {
+        const el = document.getElementById(scrollTo);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }, 50);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }
+
+  function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  // Shop filter logic
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      let visible = 0;
+      document.querySelectorAll('.product-card').forEach(card => {
+        const match = f === 'all' || card.dataset.process === f || card.dataset.type === f;
+        card.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+      document.getElementById('results-count').textContent = visible + ' coffee' + (visible !== 1 ? 's' : '');
+    });
+  });
+
+  // Size selection
+  document.querySelectorAll('.card-sizes').forEach(wrap => {
+    wrap.querySelectorAll('.size-tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        wrap.querySelectorAll('.size-tag').forEach(t => t.classList.remove('selected'));
+        tag.classList.add('selected');
+        const card = wrap.closest('.product-card');
+        const name = card.dataset.name;
+        const size = tag.textContent;
+        const cta = card.querySelector('.card-cta');
+        cta.href = `https://wa.me/254700000000?text=Hi!%20I'd%20like%20to%20order%20${encodeURIComponent(name)}%20(${encodeURIComponent(size)}).`;
+      });
+    });
+  });
+</script>
+
+<template id="__bundler_thumbnail" data-bg-color="#3e3025">
+  <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <rect width="400" height="300" fill="#3e3025"/>
+    <ellipse cx="200" cy="130" rx="48" ry="62" fill="#fccb6c" opacity="0.9"/>
+    <ellipse cx="200" cy="130" rx="22" ry="52" fill="#3e3025" opacity="0.35"/>
+    <text x="200" y="220" font-family="serif" font-size="22" font-weight="bold" fill="#fff5e0" text-anchor="middle" letter-spacing="3">WAINE BEAN</text>
+    <text x="200" y="242" font-family="serif" font-size="11" fill="#fccb6c" text-anchor="middle" letter-spacing="4">&amp; BREW</text>
+  </svg>
+</template>
+</body>
+</html>
